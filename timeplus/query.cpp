@@ -37,6 +37,7 @@ void Query::InitializeDefaultSettings() {
 
     emplace_if_absent("enable_json_type", "1");
     emplace_if_absent("output_format_native_write_json_as_string", "1");
+    emplace_if_absent("input_format_native_read_json_as_string", "1");
 }
 
 }

@@ -1,19 +1,14 @@
 #include "json.h"
 
-#include "../base/wire_format.h"
-#include "../exceptions.h"
-
 namespace timeplus {
 
 ColumnJson::ColumnJson()
     : Column(Type::CreateJson())
-    , data_(std::make_shared<ColumnString>())
-    , serialization_version_(1) {}
+    , data_(std::make_shared<ColumnString>()) {}
 
 ColumnJson::ColumnJson(ColumnRef data)
     : Column(Type::CreateJson())
-    , data_(data->AsStrict<ColumnString>())
-    , serialization_version_(1) {}
+    , data_(data->AsStrict<ColumnString>()) {}
 
 void ColumnJson::Append(std::string_view value) {
     data_->Append(value);
@@ -39,24 +34,8 @@ void ColumnJson::Append(ColumnRef column) {
     }
 }
 
-bool ColumnJson::LoadPrefix(InputStream* input, size_t) {
-    uint64_t version = 0;
-    if (!WireFormat::ReadFixed(*input, &version)) {
-        return false;
-    }
-    serialization_version_ = version;
-    return true;
-}
-
 bool ColumnJson::LoadBody(InputStream* input, size_t rows) {
-    if (serialization_version_ != 1) {
-        throw UnimplementedError("JSON column with object serialization is not supported yet; enable output_format_native_write_json_as_string");
-    }
     return data_->LoadBody(input, rows);
-}
-
-void ColumnJson::SavePrefix(OutputStream* output) {
-    WireFormat::WriteFixed<uint64_t>(*output, 1);
 }
 
 void ColumnJson::SaveBody(OutputStream* output) {
@@ -65,7 +44,6 @@ void ColumnJson::SaveBody(OutputStream* output) {
 
 void ColumnJson::Clear() {
     data_->Clear();
-    serialization_version_ = 1;
 }
 
 size_t ColumnJson::Size() const {
