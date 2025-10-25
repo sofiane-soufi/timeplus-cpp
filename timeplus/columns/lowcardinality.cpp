@@ -1,6 +1,7 @@
 #include "lowcardinality.h"
 
 #include "string.h"
+#include "json.h"
 #include "nullable.h"
 #include "../base/wire_format.h"
 
@@ -142,6 +143,9 @@ inline void AppendToDictionary(Column& dictionary, const ItemView & item) {
             return;
         case Type::String:
             column_down_cast<ColumnString>(dictionary).Append(item.get<std::string_view>());
+            return;
+        case Type::Json:
+            column_down_cast<ColumnJson>(dictionary).Append(item.get<std::string_view>());
             return;
         case Type::Nullable:
             AppendNullableToDictionary(column_down_cast<ColumnNullable>(dictionary), item);

@@ -16,6 +16,7 @@ SET ( timeplus-cpp-lib-src
     columns/geo.cpp
     columns/ip4.cpp
     columns/ip6.cpp
+    columns/json.cpp
     columns/lowcardinality.cpp
     columns/nullable.cpp
     columns/numeric.cpp
@@ -61,6 +62,7 @@ SET ( timeplus-cpp-lib-src
     columns/geo.h
     columns/ip4.h
     columns/ip6.h
+    columns/json.h
     columns/itemview.h
     columns/lowcardinality.h
     columns/lowcardinalityadaptor.h
@@ -204,6 +206,7 @@ INSTALL(FILES columns/factory.h DESTINATION include/timeplus/columns/)
 INSTALL(FILES columns/geo.h DESTINATION include/timeplus/columns/)
 INSTALL(FILES columns/ip4.h DESTINATION include/timeplus/columns/)
 INSTALL(FILES columns/ip6.h DESTINATION include/timeplus/columns/)
+INSTALL(FILES columns/json.h DESTINATION include/timeplus/columns/)
 INSTALL(FILES columns/itemview.h DESTINATION include/timeplus/columns/)
 INSTALL(FILES columns/lowcardinality.h DESTINATION include/timeplus/columns/)
 INSTALL(FILES columns/nullable.h DESTINATION include/timeplus/columns/)

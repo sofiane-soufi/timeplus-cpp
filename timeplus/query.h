@@ -105,6 +105,7 @@ public:
     /// Set per query settings
     inline Query& SetQuerySettings(QuerySettings query_settings) {
         query_settings_ = std::move(query_settings);
+        InitializeDefaultSettings();
         return *this;
     }
 
@@ -165,6 +166,8 @@ public:
     }
 
     static const std::string default_query_id;
+
+    void InitializeDefaultSettings();
 
 private:
     void OnData(const Block& block) override {
