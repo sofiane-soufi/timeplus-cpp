@@ -31,7 +31,9 @@ public:
 
     void Reserve(size_t new_cap) override;
     void Append(ColumnRef column) override;
+    bool LoadPrefix(InputStream* input, size_t rows) override;
     bool LoadBody(InputStream* input, size_t rows) override;
+    void SavePrefix(OutputStream* output) override;
     void SaveBody(OutputStream* output) override;
     void Clear() override;
     size_t Size() const override;
@@ -42,6 +44,7 @@ public:
 
 private:
     std::shared_ptr<ColumnString> data_;
+    uint64_t serialization_version_;
 };
 
 } // namespace timeplus
