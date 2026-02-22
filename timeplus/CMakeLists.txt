@@ -11,6 +11,7 @@ SET ( timeplus-cpp-lib-src
     columns/column.cpp
     columns/date.cpp
     columns/decimal.cpp
+    columns/dynamic.cpp
     columns/enum.cpp
     columns/factory.cpp
     columns/geo.cpp
@@ -57,6 +58,7 @@ SET ( timeplus-cpp-lib-src
     columns/column.h
     columns/date.h
     columns/decimal.h
+    columns/dynamic.h
     columns/enum.h
     columns/factory.h
     columns/geo.h
@@ -201,6 +203,7 @@ INSTALL(FILES columns/array.h DESTINATION include/timeplus/columns/)
 INSTALL(FILES columns/column.h DESTINATION include/timeplus/columns/)
 INSTALL(FILES columns/date.h DESTINATION include/timeplus/columns/)
 INSTALL(FILES columns/decimal.h DESTINATION include/timeplus/columns/)
+INSTALL(FILES columns/dynamic.h DESTINATION include/timeplus/columns/)
 INSTALL(FILES columns/enum.h DESTINATION include/timeplus/columns/)
 INSTALL(FILES columns/factory.h DESTINATION include/timeplus/columns/)
 INSTALL(FILES columns/geo.h DESTINATION include/timeplus/columns/)
