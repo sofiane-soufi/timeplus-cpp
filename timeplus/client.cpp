@@ -679,7 +679,8 @@ bool Client::Impl::ReadBlock(InputStream& input, Block* block) {
                     break;
                 }
                 case 101:
-                case 102: {
+                case 102:
+                case 116: {
                     int64_t ignored_internal = 0;
                     if (!WireFormat::ReadFixed(input, &ignored_internal)) {
                         return false;
