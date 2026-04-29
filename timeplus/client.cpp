@@ -389,10 +389,20 @@ void Client::Impl::Ping() {
     WireFormat::WriteUInt64(*output_, ClientCodes::Ping);
     output_->Flush();
 
-    uint64_t server_packet;
-    const bool ret = ReceivePacket(&server_packet);
+    while (true) {
+        uint64_t server_packet = 0;
+        const bool ret = ReceivePacket(&server_packet);
 
-    if (!ret || server_packet != ServerCodes::Pong) {
+        if (!ret) {
+            throw ProtocolError("fail to ping server");
+        }
+        if (server_packet == ServerCodes::Pong) {
+            return;
+        }
+        if (server_packet == ServerCodes::Progress) {
+            continue;
+        }
+
         throw ProtocolError("fail to ping server");
     }
 }
@@ -542,6 +552,11 @@ bool Client::Impl::ReceivePacket(uint64_t* server_packet) {
                 return false;
             }
         }
+        if (server_info_.revision >= DBMS_MIN_PROTOCOL_VERSION_WITH_SERVER_QUERY_TIME_IN_PROGRESS) {
+            if (!WireFormat::ReadUInt64(*input_, &info.elapsed_ns)) {
+                return false;
+            }
+        }
 
         if (events_) {
             events_->OnProgress(info);
@@ -593,6 +608,25 @@ bool Client::Impl::ReceivePacket(uint64_t* server_packet) {
         if (!WireFormat::SkipString(*input_)) {
             return false;
         }
+        return true;
+    }
+
+    case ServerCodes::PartUUIDs: {
+        uint64_t count = 0;
+        if (!WireFormat::ReadUInt64(*input_, &count)) {
+            return false;
+        }
+
+        static constexpr uint64_t kMaxPartUUIDs = 0x00FFFFFFULL;
+        static constexpr size_t kUUIDBinarySize = 16;
+        if (count > kMaxPartUUIDs) {
+            return false;
+        }
+
+        if (!input_->Skip(static_cast<size_t>(count) * kUUIDBinarySize)) {
+            return false;
+        }
+
         return true;
     }
 
@@ -1046,6 +1080,15 @@ bool Client::Impl::ReceiveHello() {
         if (server_info_.revision >= DBMS_MIN_REVISION_WITH_VERSION_PATCH) {
             if (!WireFormat::ReadUInt64(*input_, &server_info_.version_patch)) {
                 return false;
+            }
+        }
+
+        if constexpr (DMBS_PROTOCOL_REVISION >= DBMS_MIN_REVISION_WITH_INTERSERVER_SECRET_V2) {
+            if (server_info_.revision >= DBMS_MIN_REVISION_WITH_INTERSERVER_SECRET_V2) {
+                uint64_t nonce = 0;
+                if (!WireFormat::ReadFixed(*input_, &nonce)) {
+                    return false;
+                }
             }
         }
 

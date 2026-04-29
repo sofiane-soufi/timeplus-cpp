@@ -356,7 +356,8 @@ std::ostream & operator<<(std::ostream & ostr, const Progress & progress) {
         << " bytes : " << progress.bytes
         << " total_rows : " << progress.total_rows
         << " written_rows : " << progress.written_rows
-        << " written_bytes : " << progress.written_bytes;
+        << " written_bytes : " << progress.written_bytes
+        << " elapsed_ns : " << progress.elapsed_ns;
 }
 
 }

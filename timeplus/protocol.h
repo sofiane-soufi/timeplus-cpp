@@ -22,6 +22,8 @@ namespace timeplus {
                                          /// This is such an inverted logic, where server sends requests
                                          /// And client returns back response
             ProfileEvents        = 14,   /// Packet with profile events from server.
+            MergeTreeAllRangesAnnouncement = 15,
+            MergeTreeReadTaskRequest      = 16,
         };
     }
 
@@ -35,6 +37,12 @@ namespace timeplus {
             Data        = 2,    /// Data `Block` (e.g. INSERT data), may be compressed.
             Cancel      = 3,    /// Cancel query.
             Ping        = 4,    /// Check server connection.
+            TablesStatusRequest  = 5,
+            KeepAlive            = 6,
+            Scalar               = 7,
+            IgnoredPartUUIDs     = 8,
+            ReadTaskResponse     = 9,
+            MergeTreeReadTaskResponse = 10,
         };
     }
 
