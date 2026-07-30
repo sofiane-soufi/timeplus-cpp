@@ -97,6 +97,22 @@ public:
     size_t GetDictionarySize() const;
     TypeRef GetNestedType() const;
 
+    /**
+     * Returns the immutable dictionary lane used by this column.
+     *
+     * Bulk adapters may traverse this together with GetIndexColumn() to avoid
+     * repeating one dictionary lookup for every source row.
+     */
+    ColumnRef GetDictionaryColumn() const { return dictionary_column_; }
+
+    /**
+     * Returns the immutable dictionary-index lane used by this column.
+     *
+     * The concrete numeric width remains part of the column representation;
+     * callers must inspect the returned column type instead of assuming it.
+     */
+    ColumnRef GetIndexColumn() const { return index_column_; }
+
 protected:
     std::uint64_t getDictionaryIndex(std::uint64_t item_index) const;
     void appendIndex(std::uint64_t item_index);
